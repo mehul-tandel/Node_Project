@@ -2,17 +2,19 @@ const path = require('path');
 
 const express = require('express');
 
-const productsController = require('../controllers/products');
+const adminController = require('../controllers/admin');
 
 const router = express.Router();
 
 
-
 // /admin/add-product --> GET
 // render(template,{object with contains variables to be passed into the template})
-router.get('/add-product', productsController.getAddProduct); //only reference to the function has to be provided(not executed)
+router.get('/add-product', adminController.getAddProduct); //only reference to the function has to be provided(not executed)
+
+// /admin/products
+router.get('/products',adminController.getProducts);
 
 // /admin/add-product  --> POST
-router.post('/add-product', productsController.postAddProduct);
+router.post('/add-product', adminController.postAddProduct);
 
 module.exports = router;
