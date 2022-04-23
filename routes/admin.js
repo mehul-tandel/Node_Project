@@ -7,8 +7,15 @@ const router = express.Router();
 const products = [];
 
 // /admin/add-product --> GET
+// render(template,{object with contains variables to be passed into the template})
 router.get('/add-product',(req,res)=>{
-    res.render('add-product',{pageTitle: 'Add Product', path: '/admin/add-product'});
+    res.render('add-product',{
+        pageTitle: 'Add Product',
+        path: '/admin/add-product',
+        formsCSS: true,
+        productCSS: true,
+        activeAddProduct: true
+    });
 });
 
 // /admin/add-product  --> POST
