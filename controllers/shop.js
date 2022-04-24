@@ -8,8 +8,18 @@ exports.getProducts = (req,res,next)=>{
             path: '/products'
         });
     });
-  
 };
+
+exports.getProduct = (req,res) =>{
+    const prodId = req.params.productId;
+    Product.findById(prodId, product => {
+        res.render('shop/product-detail',{
+            product: product, //object to be passed in template(accessed in view) : product found(by findById function)
+            pageTitle: product.title,
+            path: '/products' //for active css class in navbar
+        }); 
+    });
+}
 
 exports.getIndex = (req,res) => {
     Product.fetchAll((products)=>{
