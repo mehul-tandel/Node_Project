@@ -13,12 +13,13 @@ exports.postAddProduct = (req,res,next)=>{
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
     const price = req.body.price;
-    Product.create({
+    req.user.createProduct({
         title: title,
         price: price,
         imageUrl: imageUrl,
         description: description
-    }).then(result=>{
+    }) //fucntion created by sequelize (user --has many (relation)--> product)
+    .then(result=>{
         console.log('Created Product');
         res.redirect('/admin/products');
     })
@@ -31,8 +32,10 @@ exports.getEditProduct = (req,res,next)=>{
         return res.redirect('/');
     }
     const prodId = req.params.productId;
-    Product.findByPk(prodId)
-    .then(product=>{
+    req.user.getProducts({where:{id:prodId}})
+    // Product.findByPk(prodId)
+    .then(products=>{
+        const product = products[0];
         if (!product){
             return res.redirect('/');
         }
@@ -70,7 +73,8 @@ exports.postEditProduct = (req,res) => {
 }
 
 exports.getProducts = (req,res)=>{
-    Product.findAll()
+    req.user.getProducts()
+    // Product.findAll()
     .then(products=>{
         res.render('admin/products', {
             prods: products,
