@@ -3,5 +3,20 @@
 
 <body>
     <%- include('../includes/nav.ejs') %>
-    <h1>Nothing There</h1>
+    <main>
+        <% if(orders.length<=0) { %>
+            <h1>Nothing There</h1>
+        <% } else { %>
+            <ul>
+                <% orders.forEach(order => { %> 
+                    <li><h1># <%= order.id %> </h1></li>
+                    <ul>
+                        <% order.products.forEach(product => { %> 
+                            <li><%= product.title %> (<%= product.orderItem.quantity %> ) </li>
+                        <% }); %> 
+                    </ul>
+                <% }); %> 
+            </ul>
+        <% } %> 
+    </main>
 <%- include('../includes/end.ejs')  %> 
