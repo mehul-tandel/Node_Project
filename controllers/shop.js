@@ -1,7 +1,7 @@
 const Product = require('../models/product');
 
 exports.getProducts = (req, res, next) => {
-    Product.findAll().then(products => {
+    Product.fetchAll().then(products => {
         res.render('shop/product-list', {
             prods: products,
             pageTitle: 'All Products',
@@ -14,7 +14,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res) => {
     const prodId = req.params.productId;
-    Product.findByPk(prodId) // Product.findAll({where:{id: prodId}}) ==> returns in array -->so product:product[0], pageTitle:products[0].title 
+    Product.findByPk(prodId)  
         .then(product => {
             res.render('shop/product-detail', {
                 product: product, //object to be passed in template(accessed in view) : product found(by findById function)
@@ -25,7 +25,7 @@ exports.getProduct = (req, res) => {
 }
 
 exports.getIndex = (req, res) => {
-    Product.findAll().then(products => {
+    Product.fetchAll().then(products => {
         res.render('shop/index', {
             prods: products,
             pageTitle: 'Shop',
