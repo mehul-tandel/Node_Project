@@ -33,7 +33,7 @@ class Product {
         .find()
         .toArray()
         .then(products => {
-            console.log(products);
+            console.log("fetchAll -->",products);
             return products;
         })
         .catch(err => console.log(err));
@@ -45,7 +45,7 @@ class Product {
         .find({_id: mongodb.ObjectId(prodId)}) //gets cursor
         .next() //gets first element by the cursor
         .then(product => {
-            console.log(product);
+            console.log("findByPk -->",product);
             return product;
         })
         .catch(err => console.log(err));
