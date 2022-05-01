@@ -17,19 +17,47 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  User.findById('5bab316ce0a7c75f783cb8a8')
-    .then(user => {
-      req.session.isLoggedIn = true;
+  const email = req.body.email;
+  const password = req.body.password;
+  User.findOne({email: email})
+  .then(user => {
+    if(!user){
+      return res.redirect('/login');
+    }
+    if(user.password !== password){
+      return res.redirect('/login');
+    }
+    req.session.isLoggedIn = true;
       req.session.user = user;
       req.session.save(err => {
         console.log(err);
         res.redirect('/');
       });
-    })
+  })
     .catch(err => console.log(err));
 };
 
-exports.postSignup = (req, res, next) => {};
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  User.findOne({email: email})
+  .then(user => {
+    if(user){
+      return res.redirect('/');
+    }
+    const newUser = new User({
+      email: email,
+      password: password,
+      cart: {items: []}
+    });
+    newUser.save()
+    .then(()=>{
+      res.redirect('/login');
+    })
+  })
+  .catch(err => console.log(err));
+};
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
