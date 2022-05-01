@@ -19,6 +19,7 @@ const store = new MongoDBStore({
     uri: MONGODB_URI,
     collection: 'sessions'
 });
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -27,7 +28,7 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({
     secret: 'a long string',
@@ -37,7 +38,10 @@ app.use(session({
 }));
 
 app.use((req,res,next)=>{
-    User.findById('626a7e020a41bced81d31c6f')
+    if (!req.session.user) {
+        return next();
+    }
+    User.findById(req.session.user._id)
     .then(user =>{
         req.user = user;
         next();
