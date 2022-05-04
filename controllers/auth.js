@@ -28,7 +28,13 @@ exports.getSignup = (req, res, next) => {
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'Signup',
-    errorMessage: message
+    errorMessage: message,
+    oldInput: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    validationErrors: []
   });
 };
 
@@ -66,24 +72,23 @@ exports.postLogin = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
   const errors = validationResult(req);
-  console.log(errors.errors);
+  // console.log(errors.errors);
   if (!errors.isEmpty()){
     return res.status(422).render('auth/signup', {
       path: '/signup',
       pageTitle: 'Signup',
-      errorMessage: errors.errors[0].msg
+      errorMessage: errors.errors[0].msg,
+      oldInput: {
+         email: email,
+         password: password,
+         confirmPassword: req.body.confirmPassword
+        },
+      validationErrors: errors.array()
     });
   }
-  
-  User.findOne({email: email})
-  .then(userDoc => {
-    if(userDoc){
-      req.flash('error', 'E-mail exists already, pick a different one.');
-      return res.redirect('/signup');
-    }
-    return bcrypt.hash(password, 12)
+    
+    bcrypt.hash(password, 12)
     .then(hashedPw => {
       const user = new User({
         email: email,
@@ -95,8 +100,6 @@ exports.postSignup = (req, res, next) => {
     .then(()=>{
       res.redirect('/login');
     })
-  })
-  .catch(err => console.log(err));
 };
 
 exports.postLogout = (req, res, next) => {
