@@ -1,0 +1,1 @@
+A dummy shopping webapp project created while learning nodejs and express while trying and testing different things. 
